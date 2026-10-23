@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the paper and/or this repository."
+title: "Quintic B-spline collocation for continuously monitored arithmetic Asian options under the Heston model"
+type: software
+authors:
+  - family-names: Sharif
+    given-names: Mukhammad
+    affiliation: "Astana IT University, Astana, Kazakhstan"
+repository-code: "https://github.com/grizzlypuma/heston-asian-collocation"
+license: MIT
+date-released: 2026-09-27
+keywords:
+  - Asian options
+  - Heston model
+  - B-spline collocation
+  - option pricing
+  - Monte Carlo
