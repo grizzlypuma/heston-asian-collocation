@@ -1,0 +1,20 @@
+r=0.00 T=0.25 q=0.00: max rel. error 9.94e-12
+r=0.00 T=0.25 q=0.02: max rel. error 1.05e-11
+r=0.00 T=1.00 q=0.00: max rel. error 1.94e-12
+r=0.00 T=1.00 q=0.02: max rel. error 2.10e-12
+r=0.00 T=5.00 q=0.00: max rel. error 6.47e-13
+r=0.00 T=5.00 q=0.02: max rel. error 7.21e-13
+r=0.04 T=0.25 q=0.00: max rel. error 8.92e-12
+r=0.04 T=0.25 q=0.02: max rel. error 9.40e-12
+r=0.04 T=1.00 q=0.00: max rel. error 1.67e-12
+r=0.04 T=1.00 q=0.02: max rel. error 1.79e-12
+r=0.04 T=5.00 q=0.00: max rel. error 5.36e-13
+r=0.04 T=5.00 q=0.02: max rel. error 5.85e-13
+r=0.10 T=0.25 q=0.00: max rel. error 7.65e-12
+r=0.10 T=0.25 q=0.02: max rel. error 8.05e-12
+r=0.10 T=1.00 q=0.00: max rel. error 1.35e-12
+r=0.10 T=1.00 q=0.02: max rel. error 1.45e-12
+r=0.10 T=5.00 q=0.00: max rel. error 4.38e-13
+r=0.10 T=5.00 q=0.02: max rel. error 4.64e-13
+worst: 1.05e-11
+base-point prices: {90.0: np.float64(13.3650818582), 100.0: np.float64(6.7095975217), 110.0: np.float64(2.7174933218)}

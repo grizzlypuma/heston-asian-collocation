@@ -1,0 +1,111 @@
+\section{Quintic B-spline collocation}\label{sec:method}
+
+\subsection{Spline spaces and grids}
+
+We approximate $w(t,\cdot,\cdot)$ in a tensor-product space of quintic splines,
+\begin{equation}\label{eq:tensor}
+w(t,x,v) \approx \sum_{i=1}^{n_x}\sum_{j=1}^{n_v} c_{ij}(t)\,N_i(x)\,M_j(v),
+\end{equation}
+where $N_i$ and $M_j$ are B-splines of degree $p=5$ on open knot vectors (end knots repeated $p+1$ times)
+\citep{deBoor2001}. The knots are the nodes of stretched grids. In each direction the nodes are
+$y^\ast + \alpha\sinh(s)$ with $s$ uniform, so they cluster around a point $y^\ast$ with a width set by
+$\alpha$. In $x$ we cluster around $x^\ast=0$ with $\alpha_x=0.3$: this is where the payoff has its kink
+and where the $x$-diffusion vanishes. In $v$ we cluster around $v^\ast=0$ with $\alpha_v=0.15$.
+For the convergence study of Section~\ref{sec:convergence} we fix the map exactly: the $s$-interval is
+split at $s=0$ (the image of $x=0$) and the two sides receive $6k$ and $11k$ uniform steps, so that
+$N_x = 17k+1$ and every grid in the sequence is an image of the same piecewise-linear map in $s$. Without
+this precaution the number of nodes on each side of $x=0$ jumps by rounding from one grid to the next,
+and the error constant jumps with it.
+
+The payoff \eqref{eq:terminal} is only continuous at $x=0$, while a quintic spline with simple knots is
+$C^4$. We insert $x=0$ as a knot of multiplicity four (removing any node closer than a quarter of the
+local spacing), which makes the space $C^1$ there. A multiplicity of five would allow a kink in the
+spline itself, but the second derivative would then be undefined at the kink, and a collocation method for
+a second-order equation needs it. With multiplicity four the interpolant of the payoff is not exact, but
+the error is confined to a few intervals around the kink.
+
+The collocation points are the Greville abscissae $\xi_k = (t_{k+1}+\dots+t_{k+p})/p$ of each knot
+vector. There are as many of them as there are basis functions, and they include both end points. In
+particular $v=0$ is a collocation line.
+
+\subsection{Collocation equations}
+
+Let $B^{(d)}_x$ be the $n_x\times n_x$ matrix with entries $N_i^{(d)}(\xi_k)$, $d=0,1,2$, and define
+$B^{(d)}_v$ in the same way. On the tensor grid of collocation points, and with $c$ the vector of
+coefficients ordered by $x$ first, the values and derivatives of \eqref{eq:tensor} are
+\begin{equation*}
+M = B^{(0)}_x\otimes B^{(0)}_v,\quad
+D_{xx} = B^{(2)}_x\otimes B^{(0)}_v,\quad
+D_{xv} = B^{(1)}_x\otimes B^{(1)}_v,\quad
+D_{vv} = B^{(0)}_x\otimes B^{(2)}_v,
+\end{equation*}
+and similarly $D_x$, $D_v$. Each one-dimensional matrix has at most six nonzeros per row, so the
+Kronecker products have at most 36. Writing $\operatorname{diag}(f)$ for the diagonal matrix of a
+coefficient $f$ evaluated at the collocation points, the spatial operator of \eqref{eq:pde} becomes
+\begin{equation}\label{eq:Lh}
+L = \operatorname{diag}\bigl(\tfrac12 v x^2\bigr)D_{xx} - \operatorname{diag}(\rho\xi v x)D_{xv}
++ \operatorname{diag}\bigl(\tfrac12\xi^2 v\bigr)D_{vv} - \operatorname{diag}\bigl(rx+\tfrac1T\bigr)D_x
++ \operatorname{diag}\bigl(\kappa(\theta-v)+\rho\xi v\bigr)D_v .
+\end{equation}
+The mixed derivative is simply one more sparse term; no splitting is involved.
+
+Boundary conditions replace collocation equations. On the lines $x=x_{\min}$ and $x=x_{\max}$ and on
+$v=v_{\max}$ the rows of \eqref{eq:Lh} are replaced by rows that evaluate \eqref{eq:bcx} or \eqref{eq:bcv}
+with the exact derivatives of the basis functions. On $v=0$ nothing is replaced. There the diagonal
+factors of the three second-order terms in \eqref{eq:Lh} are zero, and the remaining row is the
+collocation of the degenerate equation \eqref{eq:v0}. The Fichera analysis of
+Section~\ref{sec:boundaries} is thus built into the scheme without any special treatment, and the same
+holds for the geometric twin.
+
+\subsection{Time stepping}
+
+In time-to-maturity $\tau=T-t$ the semi-discrete problem is $M\dot c = Lc$ (with boundary rows held at
+their homogeneous values). We use the $\theta$-scheme
+\begin{equation}\label{eq:theta}
+(M - \theta\Delta\tau\,L)\,c^{n+1} = (M + (1-\theta)\Delta\tau\,L)\,c^n ,
+\end{equation}
+with four backward Euler steps ($\theta=1$) at the start and Crank--Nicolson ($\theta=\tfrac12$)
+afterwards. The implicit start-up \citep{Rannacher1984} damps the high-frequency error created by the
+kink; without it Crank--Nicolson is known to lose accuracy on non-smooth data
+\citep{PooleyVetzalForsyth2003}. The initial coefficients $c^0$ are obtained by collocating the payoff,
+$Mc^0 = w(T,\cdot,\cdot)$ at the collocation points, with the boundary rows included.
+
+Since $L$ does not depend on $\tau$, the two matrices on the left of \eqref{eq:theta} are factorised once
+each by a sparse LU decomposition, and each time step costs a sparse matrix--vector product and two
+triangular solves. On the grid used for most results ($N_x=273$ nodes, $N_v=61$) the system has
+$n_xn_v = 280\times65 = \num{18200}$ unknowns.
+
+The error of Crank--Nicolson with Rannacher start-up behaves like
+$c_2\Delta\tau^2 + c_3\Delta\tau^3 + \dots$; the cubic term comes from the four implicit steps, whose
+local error is not symmetric in time. Where we need the time error to be negligible we therefore use two
+levels of Richardson extrapolation,
+\begin{equation}\label{eq:richardson}
+R_1(\Delta\tau) = \frac{4P(\Delta\tau/2) - P(\Delta\tau)}{3},\qquad
+R_2(\Delta\tau) = \frac{8R_1(\Delta\tau/2) - R_1(\Delta\tau)}{7},
+\end{equation}
+which needs three solves with $N_t$, $2N_t$ and $4N_t$ steps. Section~\ref{sec:convergence} confirms both
+the second-order behaviour and the cubic remainder.
+
+\subsection{Reading the price}
+
+The price follows from \eqref{eq:readout} by evaluating the spline \eqref{eq:tensor} at
+$(K/S_0, v_0)$:
+\begin{equation*}
+C(K) = S_0\sum_{i,j} c_{ij}\,N_i(K/S_0)\,M_j(v_0).
+\end{equation*}
+No interpolation between grid values is involved, and the evaluation is repeated for as many strikes as
+needed at negligible cost. This removes a source of error that is easy to overlook with finite
+differences, where the price at an off-grid point has to be interpolated and the interpolation error adds
+to the discretisation error.
+
+\subsection{The geometric twin}
+
+The same construction applies to \eqref{eq:pdegeo}, with the kink knot at $\zeta=\ln K$. Its operator
+depends on $\tau$ only through $a=\tau/T$ and splits as
+\begin{equation*}
+L(\tau) = a^2 M_2 + a M_1 + M_0 ,
+\end{equation*}
+where $M_2$ collects the $\zeta\zeta$ term, $M_1$ the $\zeta$ and $\zeta v$ terms and $M_0$ the rest. The
+three matrices are assembled once, but the system matrix changes at every step and must be factorised
+again. This is the main cost difference between the two problems and it matters for the comparison with
+ADI in Section~\ref{sec:adi}.

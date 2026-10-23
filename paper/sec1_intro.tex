@@ -1,0 +1,79 @@
+\section{Introduction}\label{sec:intro}
+
+An Asian option pays a function of the average price of its underlying over a fixed window. Averaging
+makes the contract cheaper than its European counterpart and harder to manipulate near expiry, which is
+why it is common on commodities and currencies. It also makes the contract harder to price. Even when the
+underlying follows geometric Brownian motion, the arithmetic average of a lognormal process has no
+tractable density, and the fixed-strike arithmetic Asian call has no closed-form price. For that model
+the problem has been studied from many sides: the Laplace-transform formula of \citet{GemanYor1993} and
+its extension to jump diffusions by \citet{CaiKou2012}, the spectral expansion of \citet{Linetsky2004},
+and partial differential equation (PDE) methods, either on the full state space \citep{ZvanForsythVetzal1998}
+or after the similarity reduction of \citet{RogersShi1995} and \citet{Vecer2001,Vecer2002}, which turns
+the problem into a single space dimension. For continuous monitoring under geometric Brownian motion,
+prices accurate to ten digits are available.
+
+Under stochastic volatility the picture is thinner. In the \citet{Heston1993} model the variance is a
+second state variable, the reduction of Rogers, Shi and Ve\v{c}e\v{r} leaves a two-dimensional PDE, and
+the variance process may reach zero. \citet{FouqueHan2003} derived asymptotic approximations for fast
+mean-reverting volatility. \citet{EwaldMenkensTing2013} obtained, through what they call the Australian
+perspective, a two-dimensional pricing equation with time-independent coefficients and solved it with an
+alternating direction implicit (ADI) finite difference scheme on a uniform grid, alongside Monte Carlo
+schemes. \citet{FusaiKyriakou2016} developed optimised lower bounds for arithmetic Asian options in a
+wide class of models and reported values for continuously monitored options under Heston. For the
+geometric average under Heston, \citet{KimWee2014} gave a semi-closed-form price. For discrete monitoring
+under stochastic volatility, transform and lattice-type methods are efficient
+\citep{Corsaro2019,KirkbyNguyen2020}. \citet{PerottiGrzelak2024} extend Monte Carlo pricing of discretely
+monitored Asian options under Heston with a data-driven sampling scheme and pay particular attention to
+parameters that violate the Feller condition. \citet{CustersKarbachFriesen2026} derive semi-closed
+formulas for discretely monitored Asian options in the rough Volterra--Heston model and use the geometric
+price as a control variate for the arithmetic one. Recent work thus concentrates on discrete monitoring;
+for the continuous case under Heston the published numbers are still mainly those of
+\citet{EwaldMenkensTing2013} and \citet{FusaiKyriakou2016}. High-order discretisations of the Heston PDE exist as well, but
+mainly for European and American options; a standard reference for the ADI side is
+\citet{inthoutFoulon2010}.
+
+What we did not find is a high-order solver for the continuously monitored arithmetic Asian option under
+Heston whose accuracy has been checked against a reference fine enough to resolve it. The check matters
+most in the case practitioners actually meet. Calibrated Heston parameters often violate the Feller
+condition $2\kappa\theta\ge\xi^2$, so the variance reaches zero, the diffusion in the variance direction
+degenerates on the boundary, and the solution may be less regular there. A method can converge smoothly
+under refinement and still carry an error that refinement does not reveal; we meet two examples of this in
+Section~\ref{sec:regimes}.
+
+This paper offers such a solver together with the references needed to test it. The solver discretises
+the reduced PDE with tensor-product quintic B-splines and collocates at Greville abscissae. Because the
+coefficients of the reduced equation do not depend on time, a Crank--Nicolson march with Rannacher
+start-up \citep{Rannacher1984} needs only two sparse LU factorisations, and since the strike enters only
+through the point at which the solution is read, one solve prices all strikes. The boundary $v=0$, where
+the Fichera theory forbids a boundary condition, is simply a line of collocation points on which the
+equation degenerates by itself.
+
+Most of the paper is about checking this solver. We use three references of increasing strength. The
+first is the geometric-average version of the same contract, whose price we compute exactly (to about
+$10^{-10}$) from a Riccati system; it shares the variance dynamics and the degenerate boundary with the
+arithmetic problem and so tests the numerical machinery, though not the arithmetic reduction itself. The
+second is the lower bound of \citet{FusaiKyriakou2016}. For Heston with a continuous average the transform
+the bound requires is not given in that paper; we derive it by conditioning twice, which leads to two
+consecutive Riccati systems, and validate the result independently. The third reference combines the two
+previous ideas: the bound, being exact for the continuous average, serves as a control variate in a Monte
+Carlo simulation, and the resulting estimator reaches a standard error of about $1.6\times10^{-5}$ with
+no detectable time-discretisation bias. With this reference we compare the solver at eleven strikes and in
+thirteen parameter regimes, measure its convergence in time and space, and compare it with the modified
+Craig--Sneyd ADI scheme of \citet{inthoutFoulon2010} applied to the same equation.
+
+Two findings came out of this checking and may be useful beyond this paper. First, the truncation of the
+computational domain can produce errors that no refinement study will show, because refining the grid does
+not move the boundary. A variance cut-off $v_{\max}=1.5$ is ample when the vol-of-vol is $\xi=1$ but
+shifts the price by $7\times10^{-4}$ when $\xi=1.5$, and at a five-year maturity a cut-off $x_{\max}=8$
+in the similarity variable shifts the at-the-money price by $3.5\times10^{-4}$. Only the independent reference exposed them.
+Second, we could not reproduce the lower bounds that \citet{FusaiKyriakou2016} report for continuously
+monitored options under Heston. Our bound is higher by up to $0.011$, a small amount in practical terms but
+many standard errors of our simulation of the same quantity. We explain in Section~\ref{sec:published}
+which causes we can exclude.
+
+The paper is organised as follows. Section~\ref{sec:problem} states the problem, derives the reduced
+equation and discusses its boundaries. Section~\ref{sec:method} describes the collocation scheme.
+Section~\ref{sec:references} constructs the three references. Section~\ref{sec:results} reports the
+numerical results, and Section~\ref{sec:conclusions} concludes. Appendix~\ref{app:transform} gives the
+derivation of the transform used for the bound, and Appendix~\ref{app:tables} lists the numbers behind the
+figures.

@@ -1,0 +1,131 @@
+\section{Numbers behind the figures}\label{app:tables}
+
+\begin{table}[h]
+\centering
+\caption{Strike profile of Figure~\ref{fig:strikes} (base parameters). Reference: $\MLB+\E[D]$ from
+16 million QE paths with 256 steps; collocation: $N_x=392$, $N_v=61$, time-extrapolated.}
+\label{tab:strikes}
+\small
+\begin{tabular}{rccccc}
+\toprule
+$K$ & collocation & reference & s.e. & difference & diff./s.e.\\
+\midrule
+80 & 22.0417609 & 22.041784 & $2.9\times10^{-5}$ & $-2.3\times10^{-5}$ & $-0.81$\\
+85 & 17.7700973 & 17.770090 & $2.7\times10^{-5}$ & $+0.8\times10^{-5}$ & $+0.28$\\
+90 & 13.7602943 & 13.760319 & $2.5\times10^{-5}$ & $-2.5\times10^{-5}$ & $-0.98$\\
+95 & 10.1287138 & 10.128698 & $2.4\times10^{-5}$ & $+1.5\times10^{-5}$ & $+0.66$\\
+100 & 7.0325232 & 7.032525 & $2.3\times10^{-5}$ & $-0.1\times10^{-5}$ & $-0.06$\\
+105 & 4.6303980 & 4.630414 & $2.4\times10^{-5}$ & $-1.6\times10^{-5}$ & $-0.68$\\
+110 & 2.9674922 & 2.967497 & $2.5\times10^{-5}$ & $-0.4\times10^{-5}$ & $-0.17$\\
+115 & 1.9107425 & 1.910724 & $2.7\times10^{-5}$ & $+1.9\times10^{-5}$ & $+0.70$\\
+120 & 1.2578465 & 1.257820 & $2.8\times10^{-5}$ & $+2.7\times10^{-5}$ & $+0.95$\\
+125 & 0.8498719 & 0.849871 & $3.0\times10^{-5}$ & $+0.1\times10^{-5}$ & $+0.04$\\
+130 & 0.5883959 & 0.588386 & $3.1\times10^{-5}$ & $+1.0\times10^{-5}$ & $+0.31$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Parameter regimes of Figure~\ref{fig:regimes}. One parameter differs from the base set.
+Domains after the corrections of Section~\ref{sec:regimes}.}
+\label{tab:regimes}
+\small
+\begin{tabular}{llcccr}
+\toprule
+regime & $K$ & collocation & reference & s.e. & diff./s.e.\\
+\midrule
+$\rho$=-0.9 & 90 & 14.1367573 & 14.136778 & $2.8\times10^{-5}$ & $-0.74$\\
+ & 100 & 6.8626365 & 6.862635 & $1.6\times10^{-5}$ & $+0.07$\\
+ & 110 & 1.6255838 & 1.625596 & $1.3\times10^{-5}$ & $-0.95$\\
+\addlinespace[2pt]
+$\rho$=-0.7 & 90 & 14.0287661 & 14.028814 & $3.5\times10^{-5}$ & $-1.36$\\
+ & 100 & 6.9456726 & 6.945708 & $2.9\times10^{-5}$ & $-1.23$\\
+ & 110 & 2.1869149 & 2.186932 & $3.1\times10^{-5}$ & $-0.55$\\
+\addlinespace[2pt]
+$\rho$=-0.3 (base) & 90 & 13.7602892 & 13.760297 & $1.7\times10^{-5}$ & $-0.45$\\
+ & 100 & 7.0325248 & 7.032498 & $1.5\times10^{-5}$ & $+1.74$\\
+ & 110 & 2.9675003 & 2.967494 & $1.7\times10^{-5}$ & $+0.39$\\
+\addlinespace[2pt]
+$\rho$=0.0 & 90 & 13.4952725 & 13.495226 & $5.7\times10^{-5}$ & $+0.82$\\
+ & 100 & 7.0376366 & 7.037543 & $5.3\times10^{-5}$ & $+1.75$\\
+ & 110 & 3.4091524 & 3.409057 & $5.9\times10^{-5}$ & $+1.62$\\
+\addlinespace[2pt]
+$\rho$=0.5 & 90 & 12.8600662 & 12.860100 & $5.2\times10^{-5}$ & $-0.65$\\
+ & 100 & 6.9249363 & 6.924932 & $5.3\times10^{-5}$ & $+0.08$\\
+ & 110 & 3.9898051 & 3.989818 & $6.0\times10^{-5}$ & $-0.22$\\
+\addlinespace[2pt]
+$\rho$=0.9 & 90 & 11.9595001 & 11.959468 & $1.1\times10^{-5}$ & $+2.88$\\
+ & 100 & 6.6868654 & 6.686874 & $1.5\times10^{-5}$ & $-0.58$\\
+ & 110 & 4.3679011 & 4.367903 & $2.1\times10^{-5}$ & $-0.10$\\
+\addlinespace[2pt]
+$\xi$=0.3 & 90 & 13.7875111 & 13.787488 & $2.1\times10^{-5}$ & $+1.11$\\
+ & 100 & 7.6542525 & 7.654221 & $1.8\times10^{-5}$ & $+1.75$\\
+ & 110 & 3.7094223 & 3.709440 & $2.2\times10^{-5}$ & $-0.80$\\
+\addlinespace[2pt]
+$\xi$=0.6 & 90 & 13.8125316 & 13.812477 & $3.2\times10^{-5}$ & $+1.72$\\
+ & 100 & 7.4388835 & 7.438888 & $2.9\times10^{-5}$ & $-0.16$\\
+ & 110 & 3.3982489 & 3.398210 & $3.2\times10^{-5}$ & $+1.20$\\
+\addlinespace[2pt]
+$\xi$=1.5 & 90 & 13.6238358 & 13.623934 & $7.6\times10^{-5}$ & $-1.28$\\
+ & 100 & 6.5072983 & 6.507197 & $6.9\times10^{-5}$ & $+1.46$\\
+ & 110 & 2.5281128 & 2.528089 & $7.6\times10^{-5}$ & $+0.31$\\
+\addlinespace[2pt]
+T=0.25 & 90 & 10.9207922 & 10.920802 & $0.8\times10^{-5}$ & $-1.29$\\
+ & 100 & 3.5392539 & 3.539259 & $0.6\times10^{-5}$ & $-0.81$\\
+ & 110 & 0.5513522 & 0.551359 & $0.7\times10^{-5}$ & $-0.87$\\
+\addlinespace[2pt]
+T=0.5 & 90 & 12.0098385 & 12.009846 & $2.0\times10^{-5}$ & $-0.38$\\
+ & 100 & 4.9813995 & 4.981400 & $1.7\times10^{-5}$ & $-0.03$\\
+ & 110 & 1.4240131 & 1.424042 & $2.0\times10^{-5}$ & $-1.41$\\
+\addlinespace[2pt]
+T=3.0 & 90 & 18.5491752 & 18.549276 & $12.5\times10^{-5}$ & $-0.80$\\
+ & 100 & 12.5357125 & 12.535728 & $11.4\times10^{-5}$ & $-0.13$\\
+ & 110 & 7.9780757 & 7.978155 & $11.3\times10^{-5}$ & $-0.70$\\
+\addlinespace[2pt]
+T=5.0 & 90 & 21.9991610 & 21.999016 & $19.4\times10^{-5}$ & $+0.75$\\
+ & 100 & 16.5503620 & 16.550151 & $17.9\times10^{-5}$ & $+1.18$\\
+ & 110 & 12.0954212 & 12.095376 & $17.3\times10^{-5}$ & $+0.26$\\
+\addlinespace[2pt]
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Runs of Figure~\ref{fig:comparator}. Errors relative to the converged collocation price;
+time for one solve (three solves for the extrapolated variant).}
+\label{tab:comp}
+\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llrccc}
+\toprule
+method & grid & time (s) & error $K=90$ & error $K=100$ & error $K=110$\\
+\midrule
+colloc., CN & $35\times21$, $N_t=200$ & 0.10 & $1.2\times10^{-1}$ & $4.6\times10^{-2}$ & $1.3\times10^{-1}$\\
+colloc., CN & $52\times21$, $N_t=400$ & 0.18 & $1.0\times10^{-2}$ & $7.2\times10^{-3}$ & $3.6\times10^{-2}$\\
+colloc., CN & $69\times31$, $N_t=400$ & 0.42 & $6.1\times10^{-3}$ & $4.9\times10^{-3}$ & $1.3\times10^{-2}$\\
+colloc., CN & $103\times31$, $N_t=800$ & 1.05 & $5.6\times10^{-4}$ & $9.3\times10^{-4}$ & $2.4\times10^{-3}$\\
+colloc., CN & $137\times41$, $N_t=1600$ & 3.05 & $3.9\times10^{-5}$ & $9.6\times10^{-5}$ & $4.8\times10^{-4}$\\
+colloc., CN & $188\times41$, $N_t=3200$ & 7.58 & $1.2\times10^{-5}$ & $2.3\times10^{-5}$ & $9.3\times10^{-5}$\\
+colloc., CN & $273\times61$, $N_t=6400$ & 44.61 & $2.2\times10^{-6}$ & $9.9\times10^{-6}$ & $1.8\times10^{-5}$\\
+colloc., CN & $392\times61$, $N_t=12800$ & 191.43 & $5.6\times10^{-7}$ & $2.6\times10^{-6}$ & $4.3\times10^{-6}$\\
+\addlinespace[2pt]
+colloc., CN+extrap. & $69\times31$, $N_t=200/400/800$ & 1.38 & $5.5\times10^{-3}$ & $7.5\times10^{-3}$ & $8.7\times10^{-3}$\\
+colloc., CN+extrap. & $103\times31$, $N_t=400/800/1600$ & 3.53 & $3.6\times10^{-4}$ & $1.5\times10^{-3}$ & $1.2\times10^{-3}$\\
+colloc., CN+extrap. & $137\times41$, $N_t=800/1600/3200$ & 10.43 & $8.6\times10^{-5}$ & $2.4\times10^{-4}$ & $1.9\times10^{-4}$\\
+colloc., CN+extrap. & $188\times41$, $N_t=800/1600/3200$ & 14.35 & $7.5\times10^{-7}$ & $1.4\times10^{-5}$ & $1.9\times10^{-5}$\\
+colloc., CN+extrap. & $273\times61$, $N_t=1600/3200/6400$ & 76.17 & $7.1\times10^{-7}$ & $6.3\times10^{-7}$ & $3.4\times10^{-9}$\\
+colloc., CN+extrap. & $392\times61$, $N_t=1600/3200/6400$ & 206.77 & $1.8\times10^{-7}$ & $3.2\times10^{-7}$ & $3.3\times10^{-7}$\\
+\addlinespace[2pt]
+MCS-ADI & $81\times31$, $N_t=400$ & 0.16 & $5.3\times10^{-1}$ & $2.3\times10^{-2}$ & $5.3\times10^{-1}$\\
+MCS-ADI & $121\times41$, $N_t=400$ & 0.31 & $2.4\times10^{-1}$ & $6.4\times10^{-2}$ & $2.7\times10^{-1}$\\
+MCS-ADI & $161\times41$, $N_t=800$ & 0.72 & $1.1\times10^{-1}$ & $7.0\times10^{-2}$ & $1.6\times10^{-1}$\\
+MCS-ADI & $241\times61$, $N_t=1600$ & 3.22 & $3.4\times10^{-2}$ & $4.8\times10^{-2}$ & $7.5\times10^{-2}$\\
+MCS-ADI & $321\times61$, $N_t=1600$ & 4.15 & $1.8\times10^{-2}$ & $3.0\times10^{-2}$ & $4.3\times10^{-2}$\\
+MCS-ADI & $481\times81$, $N_t=1600$ & 8.01 & $8.1\times10^{-3}$ & $1.4\times10^{-2}$ & $2.0\times10^{-2}$\\
+MCS-ADI & $641\times101$, $N_t=1600$ & 13.13 & $4.3\times10^{-3}$ & $7.4\times10^{-3}$ & $1.1\times10^{-2}$\\
+MCS-ADI & $961\times121$, $N_t=1600$ & 24.59 & $1.4\times10^{-3}$ & $3.0\times10^{-3}$ & $5.2\times10^{-3}$\\
+\addlinespace[2pt]
+\bottomrule
+\end{tabular}
+\end{table}

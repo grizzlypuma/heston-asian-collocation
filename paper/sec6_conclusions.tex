@@ -1,0 +1,40 @@
+\section{Conclusions}\label{sec:conclusions}
+
+We have described a quintic B-spline collocation method for the continuously monitored arithmetic Asian
+call under the Heston model and, with most of the effort, the references needed to check it. The method
+is simple to state. It solves the two-dimensional equation obtained from the Rogers--Shi--Ve\v{c}e\v{r}
+reduction; the time-independence of that equation lets the whole time march run on two sparse
+factorisations; the degenerate boundary $v=0$ is handled by collocating the equation on it; and the price
+at any strike is an exact evaluation of the spline.
+
+Against a Monte Carlo reference with a standard error of about $1.6\times10^{-5}$, built from the lower
+bound of \citet{FusaiKyriakou2016} used as a control variate, the solver agrees within the reference's
+uncertainty at eleven strikes. Over thirteen parameter regimes, including a Feller ratio of $0.08$, the
+differences are as large as that uncertainty leads one to expect ($\chi^2=45.6$ for 39 comparisons), once
+the domain has been widened where the regime requires it. The
+time discretisation is of second order, with a cubic remainder from the Rannacher start-up that two levels
+of Richardson extrapolation remove. In space the observed order approaches four from below, the limit of
+collocation at Greville points, and the error at a moderate grid of 273 points in $x$ is below
+$10^{-6}$. On the same equation and at equal computing time, a modified Craig--Sneyd ADI scheme has an error
+about 150 times larger, and within 25 seconds it does not get below $5\times10^{-3}$.
+
+Some results are useful beyond this particular solver. The lower bound of Fusai and Kyriakou can be
+computed for the Heston model with a continuous average by two consecutive Riccati integrations, and once
+computed it makes an unusually effective control variate. Truncation errors of the computational domain
+can be of order $10^{-4}$ while every refinement study looks clean; they showed up only against an
+independent reference, at vol-of-vol $\xi=1.5$ and at a five-year maturity. And the published lower bounds
+for the Heston cases in \citet{FusaiKyriakou2016} are not consistent with our computations of the same
+quantity for the model as printed; we have listed what we could and could not rule out.
+
+The work has limits. We considered one model, one contract and no dividends. The references all rely on
+the affine structure of Heston; for a non-affine model the checking strategy would have to change. Our
+spatial order is capped at four by the choice of collocation points. For maximally smooth splines there
+are two known ways around this cap, moving the points to Galerkin-superconvergent positions
+\citep{Anitescu2015,Montardini2017} or keeping them and adding a high-order perturbation of the operator
+\citep{IrodotouEllinaHoustis1988,ChristaraNg2006}; classical Gauss-point collocation
+\citep{deBoorSwartz1973,BialeckiFairweather2001} would require a less smooth spline space and would lose
+the property that the degenerate boundary is a collocation line. None of these has been analysed for a
+degenerate operator with a mixed derivative and a kinked terminal condition, and at the accuracy that our
+references can confirm there is little to gain yet. Other natural extensions are discrete monitoring,
+sensitivities, which the spline representation gives directly, and floating-strike contracts, which the
+same reduction covers.

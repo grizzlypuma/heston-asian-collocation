@@ -1,0 +1,6 @@
+FK-1              : (i) max|φ(υ=0)-e^(r-q)t|=0.0e+00, |φT(0)-1|=0.0e+00 | (ii) max|φT-geo_chf|=3.6e-16 (rel 4.9e-13) | (iii) t=0: 0.0e+00  (0.1s)
+FK-2              : (i) max|φ(υ=0)-e^(r-q)t|=2.2e-16, |φT(0)-1|=0.0e+00 | (ii) max|φT-geo_chf|=6.7e-16 (rel 3.9e-13) | (iii) t=0: 0.0e+00  (0.1s)
+FK-3              : (i) max|φ(υ=0)-e^(r-q)t|=2.2e-16, |φT(0)-1|=0.0e+00 | (ii) max|φT-geo_chf|=3.4e-16 (rel 2.1e-14) | (iii) t=0: 0.0e+00  (0.1s)
+Corsaro           : (i) max|φ(υ=0)-e^(r-q)t|=0.0e+00, |φT(0)-1|=0.0e+00 | (ii) max|φT-geo_chf|=1.3e-15 (rel 1.4e-12) | (iii) t=0: 0.0e+00  (0.1s)
+Corsaro T=5 q=.02 : (i) max|φ(υ=0)-e^(r-q)t|=2.2e-16, |φT(0)-1|=0.0e+00 | (ii) max|φT-geo_chf|=2.5e-16 (rel 1.5e-13) | (iii) t=0: 5.4e-20  (0.2s)
+(iv) Gaussian limit: max|φ-exact|=2.8e-16, max|φT-exact|=1.1e-16

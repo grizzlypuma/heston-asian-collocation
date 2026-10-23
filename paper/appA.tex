@@ -1,0 +1,71 @@
+\section{The transform needed for the bound}\label{app:transform}
+
+Fix $t\in[0,T]$ and $\upsilon\in\mathbb C$, write $X=\ln S$ and $c=i\upsilon/T$. Under
+\eqref{eq:heston},
+\begin{equation*}
+\dd X_s = \bigl(r - \tfrac12v_s\bigr)\dd s + \sqrt{v_s}\,\dd W^{(1)}_s,
+\end{equation*}
+and the quantity we need is
+\begin{equation*}
+\varphi_t(\upsilon) = \E\bigl[S_t\,e^{i\upsilon Y_T}\bigr]
+= \E\Bigl[\exp\Bigl(X_t + c\int_0^T X_u\,\dd u\Bigr)\Bigr].
+\end{equation*}
+
+\paragraph{First stage.} For $s\in[t,T]$ let
+$g(s,x,v) = \E\bigl[\exp\bigl(c\int_s^TX_u\,\dd u\bigr)\mid X_s=x,\,v_s=v\bigr]$. By the Feynman--Kac
+formula, $g$ solves
+\begin{equation*}
+g_s + \bigl(r-\tfrac v2\bigr)g_x + \kappa(\theta-v)g_v + \tfrac12vg_{xx} + \rho\xi vg_{xv} + \tfrac12\xi^2vg_{vv}
++ c\,x\,g = 0,\qquad g(T,x,v)=1 .
+\end{equation*}
+The coefficients are affine in $(x,v)$, so we try $g=\exp\bigl(\mathcal A(\tau) + B_x(\tau)x + B_v(\tau)v\bigr)$
+with $\tau = T-s$. Dividing by $g$ and collecting the terms that multiply $x$, $v$ and $1$ gives
+\begin{equation}\label{eq:appsys}
+B_x' = c,\qquad
+B_v' = \tfrac12B_x^2 - \tfrac12B_x + \rho\xi B_xB_v + \tfrac12\xi^2B_v^2 - \kappa B_v,\qquad
+\mathcal A' = rB_x + \kappa\theta B_v,
+\end{equation}
+with zero initial values. In particular $B_x(\tau) = c\tau$. Note that the term in $x$ comes only from the
+running factor $c\,x$, since no coefficient of the generator depends on $x$; this is what makes $B_x$
+linear in $\tau$ and leaves a single Riccati equation, for $B_v$, whose coefficients depend on $\tau$.
+
+\paragraph{Second stage.} By the tower property,
+\begin{equation*}
+\varphi_t(\upsilon) = \E\Bigl[\exp\Bigl(c\int_0^tX_u\,\dd u\Bigr)
+\exp\bigl(\mathcal A(T-t) + (1+B_x(T-t))X_t + B_v(T-t)\,v_t\bigr)\Bigr].
+\end{equation*}
+This is the same kind of expectation over $[0,t]$ with exponential-affine terminal data, so the same system
+\eqref{eq:appsys} applies on $\tau\in[T-t,T]$, started from $\bigl(\mathcal A(T-t),\,1+B_x(T-t),\,B_v(T-t)\bigr)$.
+In other words, a single integration of \eqref{eq:appsys} from $\tau=0$ to $\tau=T$ with
+$B_x(\tau) = c\tau + \ind\{\tau\ge T-t\}$ does both stages, and
+\begin{equation*}
+\varphi_t(\upsilon) = \exp\bigl(\mathcal A(T) + (1+i\upsilon)\ln S_0 + B_v(T)\,v_0\bigr).
+\end{equation*}
+The $B_x$-part of $\mathcal A$ integrates in closed form to $r\bigl(cT^2/2 + t\bigr)$; only the
+$\kappa\theta B_v$ part is integrated numerically. Without the jump the same computation returns
+$\varphi_0(\upsilon)=\E[e^{i\upsilon Y_T}]$.
+
+\paragraph{Checks.} For $\upsilon=0$ we have $c=0$, $B_x=\ind\{\tau\ge T-t\}$, and the right-hand side of
+the $B_v$ equation is $\tfrac12B_x^2-\tfrac12B_x + (\rho\xi B_x-\kappa)B_v + \tfrac12\xi^2B_v^2$, which
+vanishes identically for $B_v=0$ whether $B_x$ is zero or one. Hence $B_v\equiv0$, $\mathcal A = rt$, and
+$\varphi_t(0)=S_0e^{rt}=\E[S_t]$, as it must be. In the Gaussian limit ($\xi\to0$, $v\equiv\sigma^2$) the pair
+$(X_t,Y_T)$ is jointly normal with
+\begin{equation*}
+\E Y_T = \ln S_0 + \bigl(r-\tfrac{\sigma^2}{2}\bigr)\tfrac T2,\qquad
+\operatorname{Var} Y_T = \frac{\sigma^2T}{3},\qquad
+\operatorname{Cov}(X_t,Y_T) = \sigma^2\Bigl(t - \frac{t^2}{2T}\Bigr),
+\end{equation*}
+which gives $\varphi_t$ in closed form and also the bound itself,
+\begin{equation*}
+\LB(\lambda) = e^{-rT}\Bigl[\frac1T\int_0^T S_0e^{rt}\,
+\Phi_{\mathcal N}\Bigl(\frac{\E Y_T + \operatorname{Cov}(X_t,Y_T) - \lambda}{\sqrt{\operatorname{Var}Y_T}}\Bigr)\dd t
+- K\,\Phi_{\mathcal N}\Bigl(\frac{\E Y_T-\lambda}{\sqrt{\operatorname{Var}Y_T}}\Bigr)\Bigr],
+\end{equation*}
+with $\Phi_{\mathcal N}$ the standard normal distribution function. Our Fourier implementation agrees with
+this formula to about $10^{-13}$.
+
+\paragraph{Moments.} With $\upsilon = u-i\delta$ the real part of the exponent is $X_t+\delta Y_T$, so the
+damping requires $\E[S_te^{\delta Y_T}]<\infty$, a moment of order roughly $1+\delta$. For the Heston model
+such moments can explode in finite time when $\rho>0$ and $\xi$ is large. With $\delta=1$ we never observed
+a blow-up in the regimes of this paper (it would stop the ODE integrator), and results for
+$\delta=0.25$, $0.5$ and $1$ agree.

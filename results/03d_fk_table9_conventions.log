@@ -1,0 +1,8 @@
+as printed              : MLB_ours - Table9 = +0.0113  +0.0007  +0.0060
+rho -> -rho             : MLB_ours - Table9 = -0.0627  +0.0889  -0.0441
+gamma -> sqrt(gamma)    : MLB_ours - Table9 = -0.0680  -0.1307  -0.0205
+gamma -> gamma^2        : MLB_ours - Table9 = +0.0820  +0.0543  +0.0075
+V0, beta read as vol (squared): MLB_ours - Table9 = -3.5187  -4.2676  -3.4486
+V0 read as vol (squared): MLB_ours - Table9 = -1.0524  -1.8579  -1.0821
+rho=0                   : MLB_ours - Table9 = -0.0032  +0.0488  -0.0166
+gamma=0 (deterministic V): MLB_ours - Table9 = +0.1022  +0.0639  +0.0019

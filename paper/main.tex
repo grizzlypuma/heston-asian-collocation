@@ -1,0 +1,82 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage[round,authoryear]{natbib}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\usepackage{xcolor}
+\usepackage{siunitx}
+\sisetup{group-separator={,},group-minimum-digits=5}
+
+\newtheorem{remark}{Remark}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\ind}{\mathbf{1}}
+\newcommand{\LB}{\mathrm{LB}}
+\newcommand{\MLB}{\mathrm{MLB}}
+\newcommand{\T}{\top}
+\renewcommand{\labelitemi}{$\bullet$}
+
+\title{Quintic B-spline collocation for continuously monitored\\ arithmetic Asian options under the Heston model}
+\author{Mukhammad Sharif\\[2pt]
+\small Astana IT University, Astana, Kazakhstan}
+\date{October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We price continuously monitored, fixed-strike arithmetic Asian calls under the Heston model by solving
+the two-dimensional pricing equation that results from the similarity reduction of Rogers, Shi and
+Ve\v{c}e\v{r}. The equation is discretised in space by tensor-product quintic B-spline collocation and in
+time by Crank--Nicolson with Rannacher start-up. Its coefficients do not depend on time, so a whole time
+march costs two sparse LU factorisations, and one solve prices every strike. The degenerate boundary
+$v=0$ needs no boundary condition: it is a collocation line on which the equation itself reduces to a
+transport equation. To test the solver we build three references. The first is an exact price for the
+geometric-average analogue, computed from a Riccati system. The second is the lower bound of Fusai and
+Kyriakou, for which we derive the transform needed under Heston with a continuous average. The third is
+a Monte Carlo estimator that uses this bound as a control variate and reaches a standard error of
+$1.5\text{--}1.7\times10^{-5}$. On a parameter set that violates the Feller condition, the solver
+agrees with this reference within its uncertainty at eleven strikes, and across thirteen parameter
+regimes the standardised differences give $\chi^2=45.6$ for 39 comparisons. The time error is of second
+order; in space the observed order approaches four from below, which is the limit set by collocation at
+Greville points. At equal computing time the collocation error is about 150 times smaller than that of a
+modified Craig--Sneyd ADI scheme on the same equation. Two side results concern practice. Truncating the
+variance domain at $v_{\max}=1.5$ is harmless for vol-of-vol $\xi=1$ but moves the price by
+$7\times10^{-4}$ at $\xi=1.5$, and grid refinement cannot detect this. We also could not reproduce the
+published lower bounds for the Heston cases of Fusai and Kyriakou; we list the causes we can rule out.
+\end{abstract}
+
+\input{sec1_intro}
+\input{sec2_problem}
+\input{sec3_method}
+\input{sec4_references}
+\input{sec5_results}
+\input{sec6_conclusions}
+
+\section*{Code and data availability}
+The solver, the reference computations and the scripts that produce every table and figure in this
+paper are available at \url{https://github.com/grizzlypuma/heston-asian-collocation} under the MIT
+licence. The repository also contains the raw output of all runs in JSON form.
+
+\section*{Use of generative AI}
+This work was carried out with substantial help from Claude (Anthropic), an AI assistant. The assistant
+wrote most of the code, ran the numerical experiments and the analysis of their results, and drafted the
+text of the paper. The author checked the derivations, reran experiments from the repository and compared
+them with the reported results, and read and edited the text. The author takes full responsibility for
+the content of the paper. Because the code and the raw output of all runs are public, every number in the
+paper can be checked independently.
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\appendix
+\input{appA}
+\input{appB}
+
+\end{document}

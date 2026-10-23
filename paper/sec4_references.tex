@@ -1,0 +1,202 @@
+\section{Reference values}\label{sec:references}
+
+A published price accurate enough to test a high-order solver does not exist for this problem, so we
+build our own. The three references below are independent of the collocation solver; how independent
+they are of each other is discussed at the end of the section.
+
+\subsection{Exact price of the geometric twin}\label{sec:geoexact}
+
+Write $W^{(1)} = \rho W^{(2)} + \sqrt{1-\rho^2}\,W^{\perp}$ and let $Y_T = \frac1T\int_0^T\ln S_u\,\dd u$,
+so that $G_T=e^{Y_T}$ and $Y_T=\zeta_T$. From the variance equation,
+$\sqrt{v}\,\dd W^{(2)} = (\dd v - \kappa(\theta-v)\,\dd t)/\xi$, and integration by parts with $a(0)=1$,
+$a(T)=0$ gives $\int_0^T a\,\dd v = -v_0 + \frac1T\int_0^T v\,\dd t$. The stochastic integral against
+$W^{(2)}$ can therefore be written in terms of the variance path alone, and conditionally on that path
+$Y_T$ is Gaussian. Its characteristic function is
+\begin{equation}\label{eq:geochf}
+\E\bigl[e^{iuY_T}\bigr] = \exp\bigl(iu\Lambda + \mathcal A(T) + \mathcal B(T)v_0\bigr),\qquad
+\Lambda = \ln S_0 + \frac{rT}{2} - \frac\rho\xi\Bigl(v_0 + \frac{\kappa\theta T}{2}\Bigr),
+\end{equation}
+where, in time-to-maturity $\tau$ and with $a=\tau/T$,
+\begin{equation}\label{eq:georiccati}
+\frac{\dd\mathcal B}{\dd\tau} = \tfrac12\xi^2\mathcal B^2 - \kappa\mathcal B + c(\tau),\qquad
+\frac{\dd\mathcal A}{\dd\tau} = \kappa\theta\mathcal B,\qquad \mathcal A(0)=\mathcal B(0)=0,
+\end{equation}
+\begin{equation*}
+c(\tau) = iu\Bigl[-\frac a2 + \frac\rho\xi\Bigl(\frac1T + \kappa a\Bigr)\Bigr] - \frac{u^2}{2}(1-\rho^2)a^2 .
+\end{equation*}
+The Riccati equation has a time-dependent coefficient and we integrate it numerically (an eighth-order
+Runge--Kutta method with relative tolerance $10^{-12}$), for all quadrature nodes at once. The price then
+follows from the damped Fourier inversion of \citet{CarrMadan1999}, with damping $\alpha=1.5$ and
+512 Gauss--Legendre nodes on $[0,200]$. The same representation underlies the semi-closed form of
+\citet{KimWee2014}.
+
+We checked this computation in three ways. In the limit $\xi\to0$, $\rho=0$, $v_0=\theta$ it reproduces the
+Black--Scholes formula for the geometric Asian call with a relative error below $1.1\times10^{-11}$ for all
+combinations of $r\in\{0,0.04,0.1\}$, $T\in\{0.25,1,5\}$ and dividend yield $q\in\{0,0.02\}$. For the full
+model the price changes by less than $5\times10^{-11}$ when the damping is varied between $0.5$ and $3$ or
+the quadrature is doubled, at maturities up to five years. And a direct simulation of the geometric payoff agrees with it within one standard error at every
+maturity we tried ($T=0.25$, $3$ and $5$, two million paths each). For the base parameters
+the prices are $13.3650818582$, $6.7095975217$ and $2.7174933218$ for $K=90$, $100$ and $110$.
+
+\subsection{The lower bound of Fusai and Kyriakou under Heston}\label{sec:fk}
+
+For any $\lambda\in\mathbb R$ the payoff satisfies $(A_T/T-K)^+ \ge (A_T/T-K)\,\ind\{Y_T>\lambda\}$, hence
+\begin{equation}\label{eq:lb}
+C(K) \ge \LB(\lambda) := e^{-rT}\,\E\bigl[(A_T/T-K)\,\ind\{Y_T>\lambda\}\bigr]
+\end{equation}
+for every $\lambda$. The idea of conditioning the arithmetic average on the geometric one goes back to
+\citet{Curran1994} and \citet{RogersShi1995}. \citet{FusaiKyriakou2016} maximise \eqref{eq:lb} over
+$\lambda$, which gives the maximal lower bound $\MLB = \LB(\lambda^\ast)$ with
+$\E[A_T/T \mid Y_T=\lambda^\ast]=K$, and compute it by Fourier inversion in $\lambda$. With a damping
+$\delta>0$,
+\begin{equation}\label{eq:Phi}
+\Phi(u;\delta) = \int_{\mathbb R} e^{(iu+\delta)\lambda}\,\LB(\lambda)\,\dd\lambda
+= \frac{e^{-rT}}{iu+\delta}\Bigl[\frac1T\int_0^T\varphi_t(u-i\delta)\,\dd t - K\,\varphi_0(u-i\delta)\Bigr],
+\end{equation}
+\begin{equation}\label{eq:phis}
+\varphi_t(\upsilon) = \E\bigl[S_t\,e^{i\upsilon Y_T}\bigr],\qquad \varphi_0(\upsilon) = \E\bigl[e^{i\upsilon Y_T}\bigr],
+\end{equation}
+and $\LB(\lambda) = \frac{e^{-\delta\lambda}}{\pi}\int_0^\infty \mathrm{Re}\bigl[e^{-iu\lambda}\Phi(u;\delta)\bigr]\dd u$.
+(In the notation of \citet{FusaiKyriakou2016}, $\varphi_t=\phi_{t,t,T}(-i/2,\cdot)$ and
+$\varphi_0=\phi_{T,T,T}(0,\cdot)$; see their equation (46).) For L\'evy models they give $\varphi_t$ in
+closed form. For affine stochastic volatility models with a continuous average they describe the route,
+via the joint characteristic function of variance, log-price and its integral and iterated conditioning,
+but do not give formulas.
+
+For the Heston model we compute $\varphi_t$ as follows; the details are in
+Appendix~\ref{app:transform}. Let $X=\ln S$ and $c=i\upsilon/T$, so that
+$S_te^{i\upsilon Y_T} = \exp\bigl(X_t + c\int_0^TX_u\,\dd u\bigr)$. Conditioning first on
+$\mathcal F_t$, the expectation of $\exp(c\int_t^TX_u\,\dd u)$ is exponential-affine in $(X_t,v_t)$. The
+product with $e^{X_t}$ and $\exp(c\int_0^tX_u\,\dd u)$ is again exponential-affine, and a second
+conditioning on $\mathcal F_0$ finishes the computation. In time-to-maturity $\tau$ both stages solve the
+same system
+\begin{equation}\label{eq:twostage}
+\frac{\dd B_x}{\dd\tau} = c,\qquad
+\frac{\dd B_v}{\dd\tau} = \tfrac12B_x^2 - \tfrac12B_x + \rho\xi B_xB_v + \tfrac12\xi^2B_v^2 - \kappa B_v,\qquad
+\frac{\dd \mathcal A}{\dd\tau} = rB_x + \kappa\theta B_v ,
+\end{equation}
+starting from zero, except that $B_x$ jumps by one at $\tau=T-t$, where the factor $e^{X_t}$ enters.
+Hence $B_x(\tau) = c\tau + \ind\{\tau\ge T-t\}$, and
+\begin{equation*}
+\varphi_t(\upsilon) = \exp\bigl(\mathcal A(T) + (1+i\upsilon)\ln S_0 + B_v(T)\,v_0\bigr).
+\end{equation*}
+The first stage, $\tau\in[0,T-t]$, is the same for every $t$ and is integrated once with output at the
+required points; the second stage is integrated separately for each quadrature node in $t$. Both are
+vectorised over the Fourier variable and integrated numerically, so no branch of a complex logarithm has
+to be tracked. We use 48 Gauss--Legendre nodes in $t$, 1024 nodes in $u$ on $[0,U]$ with
+$U = 40/\sqrt{\bar vT/3}$ and $\bar v=\max(v_0,\theta)$, and $\delta=1$. The maximum over $\lambda$ is found by
+a bounded scalar search, which is cheap because $\Phi$ is computed once and each evaluation of
+$\LB(\lambda)$ is a single weighted sum. One parameter set with three strikes takes a few seconds in
+Python.
+
+\begin{table}[t]
+\centering
+\caption{Reproduction of Table~10 of \citet{FusaiKyriakou2016}: maximal lower bound (MLB) for the
+Gaussian model, obtained with the Heston machinery in the limit $\xi\to0$ ($\xi=10^{-9}$, $\rho=0$,
+$v_0=\theta=\sigma^2$). The last column is Linetsky's spectral price from the same table, for scale.}
+\label{tab:fk10}
+\footnotesize\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{ccccc cccc}
+\toprule
+$S_0$ & $K$ & $r$ & $\sigma$ & $T$ & MLB (FK) & MLB (ours) & difference & Linetsky price\\
+\midrule
+2   & 2 & 0.02   & 0.10 & 1 & 0.055985 & 0.05598508 & $+7.9\times10^{-8}$ & 0.0559860415\\
+2   & 2 & 0.18   & 0.30 & 1 & 0.218366 & 0.21836625 & $+2.5\times10^{-7}$ & 0.2183875466\\
+2   & 2 & 0.0125 & 0.25 & 2 & 0.172226 & 0.17222617 & $+1.7\times10^{-7}$ & 0.1722687410\\
+1.9 & 2 & 0.05   & 0.50 & 1 & 0.193060 & 0.19305997 & $-2.6\times10^{-8}$ & 0.1931737903\\
+2   & 2 & 0.05   & 0.50 & 1 & 0.246298 & 0.24629819 & $+1.9\times10^{-7}$ & 0.2464156905\\
+2.1 & 2 & 0.05   & 0.50 & 1 & 0.306094 & 0.30609360 & $-4.0\times10^{-7}$ & 0.3062203648\\
+2   & 2 & 0.05   & 0.50 & 2 & 0.349779 & 0.34977879 & $-2.1\times10^{-7}$ & 0.3500952190\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+We validated the implementation in four independent ways before using it.
+\begin{itemize}
+\item Without the jump in $B_x$ and at $t=T$, the system \eqref{eq:twostage} computes $\varphi_0$, the
+characteristic function of $Y_T$. The geometric reference of Section~\ref{sec:geoexact} computes the same
+quantity by a different derivation (it eliminates the log-price through the variance path), and the two
+agree to $1.3\times10^{-15}$ on five parameter sets, including $T=5$ and a nonzero dividend yield.
+\item For $\upsilon=0$ the system must return $\E[S_t]=S_0e^{rt}$ exactly, which it does to machine
+precision.
+\item In the Gaussian limit, $\LB(\lambda)$ has a closed form, because $(X_t,Y_T)$ is jointly Gaussian.
+Our Fourier values agree with it to about $10^{-13}$ for all $\lambda$ tested, and the maxima reproduce all
+seven values of Table~10 of \citet{FusaiKyriakou2016} to the six printed digits
+(Table~\ref{tab:fk10}).
+\item For the Heston parameter sets of their Table~9, a direct Monte Carlo estimate of $\LB(\lambda^\ast)$
+at our $\lambda^\ast$ agrees with our Fourier value within two standard errors in nine runs
+(three step sizes per set, standard errors $1.4$--$5.4\times10^{-4}$).
+\end{itemize}
+The bound is also stable: changing $\delta$ between $0.25$ and $2$ or doubling either quadrature moved it
+by at most $1.4\times10^{-10}$ in every parameter set where we tried it, far below the Monte Carlo
+uncertainty. Fusai and Kyriakou also give an upper bound for the error of the MLB. We did not
+compute it: it requires conditional second moments of the average, and the values they report for
+discretely monitored Heston options, $0.013$ to $0.049$, are far wider than the accuracy we need.
+
+\subsection{Monte Carlo with the bound as control variate}\label{sec:e8}
+
+Since the bound is exact for the continuous average, it can be used to correct a simulation, an idea
+already used by \citet[Section~5]{FusaiKyriakou2016}. Along each path the difference
+\begin{equation}\label{eq:gap}
+\begin{aligned}
+D &= e^{-rT}\Bigl[(A_T/T-K)^+ - (A_T/T-K)\,\ind\{Y_T>\lambda^\ast\}\Bigr]\\
+  &= e^{-rT}\Bigl[(A_T/T-K)^+\ind\{Y_T\le\lambda^\ast\} + (K-A_T/T)^+\ind\{Y_T>\lambda^\ast\}\Bigr]
+\end{aligned}
+\end{equation}
+is nonnegative and small: it is the part of the payoff that the bound misses, and it is nonzero only on
+paths where the geometric average points the wrong way. We estimate
+\begin{equation*}
+C(K) = \MLB + \E[D]
+\end{equation*}
+by simulating $\E[D]$ with the quadratic-exponential scheme of \citet{Andersen2008}, antithetic normals,
+and the trapezoidal rule for $A_T$ and $Y_T$. The time-discretisation bias of this estimator is the bias
+of $\E[D]$ alone, and since $D$ is small, so is its bias.
+
+For the base parameters $\E[D]$ is $0.0043$, $0.0036$ and $0.0038$ for $K=90,100,110$. We ran seven
+independent batches with 32, 64 (eight million paths each) and 128, 256, 512, 1024 and 2048 (four million
+paths each) time steps. The batches are mutually consistent ($\chi^2$ of 1.2, 9.4 and 7.2 on six degrees
+of freedom), and a weighted regression of the estimates on the step size gives slopes within $1.8$
+standard errors of zero. We therefore pool them. The result, which we call the reference price
+throughout, is shown in Table~\ref{tab:ref}; we quote it with an uncertainty of $\pm3\times10^{-5}$,
+which also covers the difference between the pooled value and the intercept of the regression. On the same
+paths, a control variate based on the exact geometric price \citep{KemnaVorst1990} leaves a standard
+error eight to ten times larger. The geometric control variate is the usual choice for arithmetic Asian
+options under stochastic volatility, used recently by \citet{CustersKarbachFriesen2026} for discrete
+monitoring, so the gain from the bound may be of use beyond the continuous case, although we have not
+tested that. An estimate of that kind from eight million paths with 512 steps, which
+is how we computed the reference before the bound was available, is listed for comparison; it differs
+from the new reference by $1.3$ to $1.6$ of its own standard errors.
+
+\begin{table}[t]
+\centering
+\caption{Reference prices for the base parameters ($\kappa=1$, $\theta=0.09$, $\xi=1$, $\rho=-0.3$,
+$v_0=0.09$, $S_0=100$, $r=0.04$, $T=1$). MC: pooled estimate $\MLB+\E[D]$ from 36 million QE paths.}
+\label{tab:ref}
+\small
+\begin{tabular}{lccc}
+\toprule
+& $K=90$ & $K=100$ & $K=110$\\
+\midrule
+Maximal lower bound (Section~\ref{sec:fk}) & 13.755959 & 7.028864 & 2.963683\\
+$\E[D]$ & 0.004338 & 0.003634 & 0.003811\\
+Reference price $\MLB+\E[D]$ & 13.760297 & 7.032498 & 2.967494\\
+\quad standard error & $1.7\times10^{-5}$ & $1.5\times10^{-5}$ & $1.7\times10^{-5}$\\
+\quad intercept of regression in $\Delta t$ & 13.760288 & 7.032471 & 2.967472\\
+Geometric control variate only, 8M paths & 13.759848 & 7.032017 & 2.967033\\
+\quad standard error & $3.5\times10^{-4}$ & $3.2\times10^{-4}$ & $2.8\times10^{-4}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+At long maturities $\E[D]$ is larger ($0.014$--$0.035$ for $T=3$ and $5$), and there its bias does become
+visible: at $T=3$ the estimate with 256 steps differs from those with 1024 and 2048 steps by up to
+$6\times10^{-4}$. For these maturities we use 1024 steps or more.
+
+\paragraph{How independent are the references?} The Monte Carlo reference and the bound do not use the
+collocation solver in any way, and the bound's main ingredient, $\varphi_t$, is validated against three
+separate checks. They do share with the geometric reference the affine structure of the model, numerical
+integration of Riccati equations and Fourier inversion, and the reference price in Table~\ref{tab:ref}
+depends on the bound directly. What the solver is compared with is therefore independent of the solver, but
+not of the affine machinery. In Section~\ref{sec:published} we add a simulation with a different
+time-stepping scheme and no control variate at all, which shares nothing with our other computations except
+the model.
